@@ -19,6 +19,32 @@ class Anagrammer:
     
     def getAnagrams(self, word):
         if self.createAnagramHash(word) in self.index:
-            return self.index[self.createAnagramHash(word)]
+            return [w for w in self.index[self.createAnagramHash(word)] if w != word]
         else: 
-            return [word]
+            return 
+    
+    #returns the intersection of two lists
+    @staticmethod
+    def intersection( lst1, lst2): 
+        temp = set(lst2) 
+        lst3 = [value for value in lst1 if value in temp] 
+        return lst3 
+
+    #returns a morphological distance between two words
+    #based on the relative trigrams the two have in common
+    #value between 0 and 1, 0 being most similar
+    @staticmethod
+    def morph_dist( word1, word2):
+        n = 3
+        if len(word1) == 1:
+            return 0
+        if len(word1) <= 3:
+            n=2
+        #expects two words of same length
+        #we convert both words in ngrams 
+        w1 = [word1[i:i+n] for i in range(len(word1)-n+1)]
+        w2 = [word2[i:i+n] for i in range(len(word2)-n+1)]
+        #and calculate the relative intersection
+        return 1 - len(Anagrammer.intersection(w1, w2)) / len(w2)
+           
+    
